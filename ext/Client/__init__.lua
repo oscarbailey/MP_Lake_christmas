@@ -27,3 +27,43 @@ ResourceManager:RegisterInstanceLoadHandler(Guid("0964415F-1A6E-4BA3-A11D-EEDDF2
 		DataField(instance.fields[18]).value = 'CString "PLAYGROUND"'
 	end
 end)
+
+function AddLight(trans, color)
+	local entityData = PointLightEntityData()
+	entityData.color = color
+	entityData.radius = 100.0
+	entityData.intensity = 1.0
+	entityData.visible = true
+	entityData.enlightenEnable = true
+
+	local entityPos = LinearTransform()
+	entityPos.trans = trans
+
+	local createdEntity = EntityManager:CreateEntity(entityData, entityPos)
+
+	print("Created light @ ")
+	print(entityPos.trans)
+
+	if createdEntity ~= nil then
+		print("initialising light")
+		createdEntity:Init(Realm.Realm_ClientAndServer, true)
+		print("light initialised")
+	else
+		print("Created Entity was nil!")
+	end
+end
+
+function AddChristmasLights()
+    -- Add all the christmas lights to MP_Lake
+    local red = Vec3(1.0, 0.0, 0.0)
+    local green = Vec3(0.0, 1.0, 0.0)
+
+    AddLight(Vec3(-33.717659, 70.0, 168.997116), red)
+end
+
+Events:Subscribe('Level:Loaded', function(levelName, gameMode)
+	if levelName == "Levels/MP_Subway/MP_Subway" and gameMode == "ConquestSmall0" then
+		print("Adding christmas lights...")
+		AddChristmasLights()
+	end
+end)
