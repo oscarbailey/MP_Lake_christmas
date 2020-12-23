@@ -28,6 +28,9 @@ ResourceManager:RegisterInstanceLoadHandler(Guid("0964415F-1A6E-4BA3-A11D-EEDDF2
 	end
 end)
 
+-- Global var for storing the current light entity
+light_entity = nil
+
 function AddLight(trans, color)
 	local entityData = PointLightEntityData()
 	entityData.color = color
@@ -39,7 +42,7 @@ function AddLight(trans, color)
 	local entityPos = LinearTransform()
 	entityPos.trans = trans
 
-	local createdEntity = EntityManager:CreateEntity(entityData, entityPos)
+	local createdEntity	= EntityManager:CreateEntity(entityData, entityPos)
 
 	print("Created light @ ")
 	print(entityPos.trans)
@@ -47,6 +50,10 @@ function AddLight(trans, color)
 	if createdEntity ~= nil then
 		print("initialising light")
 		createdEntity:Init(Realm.Realm_ClientAndServer, true)
+		if light_entity ~= nil then
+			light_entity:Destroy()
+		end
+		light_entity = createdEntity
 		print("light initialised")
 	else
 		print("Created Entity was nil!")
@@ -58,7 +65,8 @@ function AddChristmasLights()
     local red = Vec3(1.0, 0.0, 0.0)
     local green = Vec3(0.0, 1.0, 0.0)
 
-    AddLight(Vec3(-33.717659, 70.0, 168.997116), red)
+	AddLight(Vec3(-33.717659, 70.0, 168.997116), red)
+    AddLight(Vec3(-33.717659, 70.0, 168.997116), green)
 end
 
 Events:Subscribe('Level:Loaded', function(levelName, gameMode)
@@ -67,3 +75,31 @@ Events:Subscribe('Level:Loaded', function(levelName, gameMode)
 		AddChristmasLights()
 	end
 end)
+
+Hooks:Install('BulletEntity:Collision', 1, function(hook, entity, hit, shooter)
+	-- Do stuff here.
+    local green = Vec3(0.0, 1.0, 0.0)
+	AddLight(hit.position, green)
+	print(hit.position)
+end)
+
+-- NetEvents:Subscribe('LightSetX', light_entity, function(data)
+-- 	if light_entity ~= nil then
+-- 		print(data)
+-- 		light_entity.transform.pos.trans.x = parseFloat(data)
+-- 	end
+-- end)
+
+-- NetEvents:Subscribe('LightSetY', light_entity, function(data)
+-- 	if light_entity ~= nil then
+-- 		print(data)
+-- 		light_entity.transform.pos.trans.x = parseFloat(data)
+-- 	end
+-- end)
+
+-- NetEvents:Subscribe('LightSetZ', light_entity, function(data)
+-- 	if light_entity ~= nil then
+-- 		print(data)
+-- 		light_entity.transform.pos.trans.x = parseFloat(data)
+-- 	end
+-- end)
