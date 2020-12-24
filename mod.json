@@ -1,8 +1,9 @@
 {
 	"Name": "MP_Lake_christmas",
-	"Authors": ["Flash_Hit", "Janssent", "Oswald"],
+	"Authors": ["Flash_Hit", "Janssent", "Oswald", "Reirei"],
 	"Description": "Play Metro Conquest on the Rush / Squad Deathmatch area... at Christmas!",
 	"URL": "",
+    "Tags": ["christmas"],
 	"Version": "1.0.0",
 	"HasWebUI": false,
 	"HasVeniceEXT": true,
