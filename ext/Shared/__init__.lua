@@ -37,83 +37,85 @@ function OnLevelDestroy()
 
 end
 
-Events:Subscribe('Level:Loaded', function(levelName, gameMode)
-	-- Yoinked from the night-time mod - Thanks Reirei!
-	print("Level loaded, switching to night mode...")
-	if levelName == "Levels/MP_Subway/MP_Subway" and gameMode == "ConquestSmall0" then
-		print("Map is MP_Lake_christmas...")
-		EntityManager:TraverseAllEntities(function(instance)
-			if instance:Is('OutdoorLightComponentData') then
-				local outdoor = OutdoorLightComponentData(instance)
-				outdoor:MakeWritable()
+-- Integrated night-mode - not working...
 
-				outdoor.sunColor = Vec3(0.01, 0.01, 0.01)
-				outdoor.skyColor = Vec3(0.01, 0.01, 0.01)
-				outdoor.groundColor = Vec3(0, 0, 0)
+-- Events:Subscribe('Level:Loaded', function(levelName, gameMode)
+-- 	-- Yoinked from the night-time mod - Thanks Reirei!
+-- 	print("Level loaded, switching to night mode...")
+-- 	if levelName == "Levels/MP_Subway/MP_Subway" and gameMode == "ConquestSmall0" then
+-- 		print("Map is MP_Lake_christmas...")
+-- 		EntityManager:TraverseAllEntities(function(instance)
+-- 			if instance:Is('OutdoorLightComponentData') then
+-- 				local outdoor = OutdoorLightComponentData(instance)
+-- 				outdoor:MakeWritable()
 
-				outdoor.skyEnvmapShadowScale = 0.5
-			end
+-- 				outdoor.sunColor = Vec3(0.01, 0.01, 0.01)
+-- 				outdoor.skyColor = Vec3(0.01, 0.01, 0.01)
+-- 				outdoor.groundColor = Vec3(0, 0, 0)
 
-			if instance:Is('SkyComponentData') then
-				local sky = SkyComponentData(instance)
-				sky:MakeWritable()
+-- 				outdoor.skyEnvmapShadowScale = 0.5
+-- 			end
 
-				sky.brightnessScale = 0.01
-				sky.sunSize = 0.01
-				sky.sunScale = 1
+-- 			if instance:Is('SkyComponentData') then
+-- 				local sky = SkyComponentData(instance)
+-- 				sky:MakeWritable()
 
-				sky.cloudLayer1SunLightIntensity = 0.01
-				sky.cloudLayer1SunLightPower = 0.01
-				sky.cloudLayer1AmbientLightIntensity = 0.01
+-- 				sky.brightnessScale = 0.01
+-- 				sky.sunSize = 0.01
+-- 				sky.sunScale = 1
 
-				sky.cloudLayer2SunLightIntensity = 0.01
-				sky.cloudLayer2SunLightPower = 0.01
-				sky.cloudLayer2AmbientLightIntensity = 0.01
+-- 				sky.cloudLayer1SunLightIntensity = 0.01
+-- 				sky.cloudLayer1SunLightPower = 0.01
+-- 				sky.cloudLayer1AmbientLightIntensity = 0.01
 
-				sky.staticEnvmapScale = 0.1
-				sky.skyEnvmap8BitTexScale = 0.8
+-- 				sky.cloudLayer2SunLightIntensity = 0.01
+-- 				sky.cloudLayer2SunLightPower = 0.01
+-- 				sky.cloudLayer2AmbientLightIntensity = 0.01
 
-				if sky.partition.name:match('mp_subway') or sky.partition.name:match('mp_011') then
-					sky.staticEnvmapScale = 0.01
-				end
+-- 				sky.staticEnvmapScale = 0.1
+-- 				sky.skyEnvmap8BitTexScale = 0.8
 
-				if sky.partition.name:match('mp_subway_subway') then
-					sky.staticEnvmapScale = 0.1
+-- 				if sky.partition.name:match('mp_subway') or sky.partition.name:match('mp_011') then
+-- 					sky.staticEnvmapScale = 0.01
+-- 				end
 
-					ResourceManager:RegisterInstanceLoadHandlerOnce(Guid('36536A99-7BE3-11E0-8611-A913E18AE9A4'), Guid('64EE680C-405E-2E81-E327-6DF58605AB0B'), function(loadedInstance)
-						sky.staticEnvmapTexture = TextureAsset(loadedInstance)
-					end)
-				end
-			end
+-- 				if sky.partition.name:match('mp_subway_subway') then
+-- 					sky.staticEnvmapScale = 0.1
 
-			if instance:Is('FogComponentData') then
-				local fog = FogComponentData(instance)
-				fog:MakeWritable()
+-- 					ResourceManager:RegisterInstanceLoadHandlerOnce(Guid('36536A99-7BE3-11E0-8611-A913E18AE9A4'), Guid('64EE680C-405E-2E81-E327-6DF58605AB0B'), function(loadedInstance)
+-- 						sky.staticEnvmapTexture = TextureAsset(loadedInstance)
+-- 					end)
+-- 				end
+-- 			end
 
-				fog.fogColor = Vec3(0.1, 0.1, 0.1)
-			end
+-- 			if instance:Is('FogComponentData') then
+-- 				local fog = FogComponentData(instance)
+-- 				fog:MakeWritable()
 
-			if instance:Is('TonemapComponentData') then
-				local tonemap = TonemapComponentData(instance)
-				tonemap:MakeWritable()
+-- 				fog.fogColor = Vec3(0.1, 0.1, 0.1)
+-- 			end
 
-				tonemap.maxExposure = 4
-				tonemap.middleGray = 0.02
-			end
+-- 			if instance:Is('TonemapComponentData') then
+-- 				local tonemap = TonemapComponentData(instance)
+-- 				tonemap:MakeWritable()
 
-			if instance:Is('EnlightenComponentData') then
-				local enlighten = EnlightenComponentData(instance)
-				enlighten:MakeWritable()
+-- 				tonemap.maxExposure = 4
+-- 				tonemap.middleGray = 0.02
+-- 			end
 
-				enlighten.enable = false
-			end
+-- 			if instance:Is('EnlightenComponentData') then
+-- 				local enlighten = EnlightenComponentData(instance)
+-- 				enlighten:MakeWritable()
 
-			if instance:Is('SunFlareComponentData') then
-				local flare = SunFlareComponentData(instance)
-				flare:MakeWritable()
+-- 				enlighten.enable = false
+-- 			end
 
-				flare.excluded = true
-			end
-		end)
-	end
-end)
+-- 			if instance:Is('SunFlareComponentData') then
+-- 				local flare = SunFlareComponentData(instance)
+-- 				flare:MakeWritable()
+
+-- 				flare.excluded = true
+-- 			end
+-- 		end)
+-- 	end
+-- end)
