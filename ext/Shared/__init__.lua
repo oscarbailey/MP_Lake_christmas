@@ -37,85 +37,133 @@ function OnLevelDestroy()
 
 end
 
--- Integrated night-mode - not working...
+-- Integrated night-mode, yoinked from the night-time mod - Thanks Reirei!
 
--- Events:Subscribe('Level:Loaded', function(levelName, gameMode)
--- 	-- Yoinked from the night-time mod - Thanks Reirei!
--- 	print("Level loaded, switching to night mode...")
--- 	if levelName == "Levels/MP_Subway/MP_Subway" and gameMode == "ConquestSmall0" then
--- 		print("Map is MP_Lake_christmas...")
--- 		EntityManager:TraverseAllEntities(function(instance)
--- 			if instance:Is('OutdoorLightComponentData') then
--- 				local outdoor = OutdoorLightComponentData(instance)
--- 				outdoor:MakeWritable()
+night_guids = {}
 
--- 				outdoor.sunColor = Vec3(0.01, 0.01, 0.01)
--- 				outdoor.skyColor = Vec3(0.01, 0.01, 0.01)
--- 				outdoor.groundColor = Vec3(0, 0, 0)
+Events:Subscribe('Level:Loaded', function(levelName, gameMode)
+    print("Level loaded, switching to night mode...")
+    if levelName == "MP_Subway" and gameMode == "ConquestSmall0" then
+        print("The level is correct...")
+        for i, v in ipairs(night_guids) do
+            instance = ResourceManager:FindInstanceByGuid(v[1], v[2])
 
--- 				outdoor.skyEnvmapShadowScale = 0.5
--- 			end
+            if instance:Is('OutdoorLightComponentData') then
+                local outdoor = OutdoorLightComponentData(instance)
+                outdoor:MakeWritable()
 
--- 			if instance:Is('SkyComponentData') then
--- 				local sky = SkyComponentData(instance)
--- 				sky:MakeWritable()
+                outdoor.sunColor = Vec3(0.01, 0.01, 0.01)
+                outdoor.skyColor = Vec3(0.01, 0.01, 0.01)
+                outdoor.groundColor = Vec3(0, 0, 0)
 
--- 				sky.brightnessScale = 0.01
--- 				sky.sunSize = 0.01
--- 				sky.sunScale = 1
+                outdoor.skyEnvmapShadowScale = 0.5
+            end
 
--- 				sky.cloudLayer1SunLightIntensity = 0.01
--- 				sky.cloudLayer1SunLightPower = 0.01
--- 				sky.cloudLayer1AmbientLightIntensity = 0.01
+            if instance:Is('SkyComponentData') then
+                print("SkyComponentData: ")
+                print(instance.instanceGuid)
+                local sky = SkyComponentData(instance)
+                sky:MakeWritable()
 
--- 				sky.cloudLayer2SunLightIntensity = 0.01
--- 				sky.cloudLayer2SunLightPower = 0.01
--- 				sky.cloudLayer2AmbientLightIntensity = 0.01
+                sky.brightnessScale = 0.01
+                sky.sunSize = 0.01
+                sky.sunScale = 1
 
--- 				sky.staticEnvmapScale = 0.1
--- 				sky.skyEnvmap8BitTexScale = 0.8
+                sky.cloudLayer1SunLightIntensity = 0.01
+                sky.cloudLayer1SunLightPower = 0.01
+                sky.cloudLayer1AmbientLightIntensity = 0.01
 
--- 				if sky.partition.name:match('mp_subway') or sky.partition.name:match('mp_011') then
--- 					sky.staticEnvmapScale = 0.01
--- 				end
+                sky.cloudLayer2SunLightIntensity = 0.01
+                sky.cloudLayer2SunLightPower = 0.01
+                sky.cloudLayer2AmbientLightIntensity = 0.01
 
--- 				if sky.partition.name:match('mp_subway_subway') then
--- 					sky.staticEnvmapScale = 0.1
+                sky.staticEnvmapScale = 0.1
+                sky.skyEnvmap8BitTexScale = 0.8
 
--- 					ResourceManager:RegisterInstanceLoadHandlerOnce(Guid('36536A99-7BE3-11E0-8611-A913E18AE9A4'), Guid('64EE680C-405E-2E81-E327-6DF58605AB0B'), function(loadedInstance)
--- 						sky.staticEnvmapTexture = TextureAsset(loadedInstance)
--- 					end)
--- 				end
--- 			end
+                if sky.partition.name:match('mp_subway') or sky.partition.name:match('mp_011') then
+                    sky.staticEnvmapScale = 0.01
+                end
 
--- 			if instance:Is('FogComponentData') then
--- 				local fog = FogComponentData(instance)
--- 				fog:MakeWritable()
+                if sky.partition.name:match('mp_subway_subway') then
+                    sky.staticEnvmapScale = 0.1
 
--- 				fog.fogColor = Vec3(0.1, 0.1, 0.1)
--- 			end
+                    ResourceManager:RegisterInstanceLoadHandlerOnce(Guid('36536A99-7BE3-11E0-8611-A913E18AE9A4'), Guid('64EE680C-405E-2E81-E327-6DF58605AB0B'), function(loadedInstance)
+                        sky.staticEnvmapTexture = TextureAsset(loadedInstance)
+                    end)
+                end
+            end
 
--- 			if instance:Is('TonemapComponentData') then
--- 				local tonemap = TonemapComponentData(instance)
--- 				tonemap:MakeWritable()
+            if instance:Is('FogComponentData') then
+                print("FogComponentData: ")
+                print(instance.instanceGuid)
+                local fog = FogComponentData(instance)
+                fog:MakeWritable()
 
--- 				tonemap.maxExposure = 4
--- 				tonemap.middleGray = 0.02
--- 			end
+                fog.fogColor = Vec3(0.1, 0.1, 0.1)
+            end
 
--- 			if instance:Is('EnlightenComponentData') then
--- 				local enlighten = EnlightenComponentData(instance)
--- 				enlighten:MakeWritable()
+            if instance:Is('TonemapComponentData') then
+                print("TonemapComponentData: ")
+                print(instance.instanceGuid)
+                local tonemap = TonemapComponentData(instance)
+                tonemap:MakeWritable()
 
--- 				enlighten.enable = false
--- 			end
+                tonemap.maxExposure = 4
+                tonemap.middleGray = 0.02
+            end
 
--- 			if instance:Is('SunFlareComponentData') then
--- 				local flare = SunFlareComponentData(instance)
--- 				flare:MakeWritable()
+            if instance:Is('EnlightenComponentData') then
+                print("EnlightenComponentData: ")
+                print(instance.instanceGuid)
+                local enlighten = EnlightenComponentData(instance)
+                enlighten:MakeWritable()
 
--- 				flare.excluded = true
--- 			end
--- 		end)
--- 	end
--- end)
+                enlighten.enable = false
+            end
+
+            if instance:Is('SunFlareComponentData') then
+                print("SunFlareComponentData: ")
+                print(instance.instanceGuid)
+                local flare = SunFlareComponentData(instance)
+                flare:MakeWritable()
+
+                flare.excluded = true
+            end
+        end
+    end
+end)
+
+
+Events:Subscribe('Partition:Loaded', function(partition)
+    for _, instance in pairs(partition.instances) do
+        if instance:Is('OutdoorLightComponentData') then
+            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
+            print("storing guid")
+        end
+
+        if instance:Is('SkyComponentData') then
+            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
+            print("storing guid")
+        end
+
+        if instance:Is('FogComponentData') then
+            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
+            print("storing guid")
+        end
+
+        if instance:Is('TonemapComponentData') then
+            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
+            print("storing guid")
+        end
+
+        if instance:Is('EnlightenComponentData') then
+            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
+            print("storing guid")
+        end
+
+        if instance:Is('SunFlareComponentData') then
+            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
+            print("storing guid")
+        end
+    end
+end)
