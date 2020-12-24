@@ -38,6 +38,8 @@ function OnLevelDestroy()
 end
 
 -- Integrated night-mode, yoinked from the night-time mod - Thanks Reirei!
+-- This seems to cause a bug where the minimap is covered in red-zone...
+-- Using the night-time mod separately works fine
 
 Events:Subscribe('Partition:Loaded', function(partition)
     levelName = SharedUtils:GetLevelName()
