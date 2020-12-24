@@ -39,15 +39,12 @@ end
 
 -- Integrated night-mode, yoinked from the night-time mod - Thanks Reirei!
 
-night_guids = {}
+Events:Subscribe('Partition:Loaded', function(partition)
+    levelName = SharedUtils:GetLevelName()
+    gameMode = SharedUtils:GetCurrentGameMode()
 
-Events:Subscribe('Level:Loaded', function(levelName, gameMode)
-    print("Level loaded, switching to night mode...")
-    if levelName == "MP_Subway" and gameMode == "ConquestSmall0" then
-        print("The level is correct...")
-        for i, v in ipairs(night_guids) do
-            instance = ResourceManager:FindInstanceByGuid(v[1], v[2])
-
+    if (levelName == "MP_Subway" or levelName == "Levels/MP_Subway/MP_Subway") and gameMode == "ConquestSmall0" then
+        for _, instance in pairs(partition.instances) do
             if instance:Is('OutdoorLightComponentData') then
                 local outdoor = OutdoorLightComponentData(instance)
                 outdoor:MakeWritable()
@@ -60,8 +57,6 @@ Events:Subscribe('Level:Loaded', function(levelName, gameMode)
             end
 
             if instance:Is('SkyComponentData') then
-                print("SkyComponentData: ")
-                print(instance.instanceGuid)
                 local sky = SkyComponentData(instance)
                 sky:MakeWritable()
 
@@ -94,8 +89,6 @@ Events:Subscribe('Level:Loaded', function(levelName, gameMode)
             end
 
             if instance:Is('FogComponentData') then
-                print("FogComponentData: ")
-                print(instance.instanceGuid)
                 local fog = FogComponentData(instance)
                 fog:MakeWritable()
 
@@ -103,8 +96,6 @@ Events:Subscribe('Level:Loaded', function(levelName, gameMode)
             end
 
             if instance:Is('TonemapComponentData') then
-                print("TonemapComponentData: ")
-                print(instance.instanceGuid)
                 local tonemap = TonemapComponentData(instance)
                 tonemap:MakeWritable()
 
@@ -113,8 +104,6 @@ Events:Subscribe('Level:Loaded', function(levelName, gameMode)
             end
 
             if instance:Is('EnlightenComponentData') then
-                print("EnlightenComponentData: ")
-                print(instance.instanceGuid)
                 local enlighten = EnlightenComponentData(instance)
                 enlighten:MakeWritable()
 
@@ -122,48 +111,11 @@ Events:Subscribe('Level:Loaded', function(levelName, gameMode)
             end
 
             if instance:Is('SunFlareComponentData') then
-                print("SunFlareComponentData: ")
-                print(instance.instanceGuid)
                 local flare = SunFlareComponentData(instance)
                 flare:MakeWritable()
 
                 flare.excluded = true
             end
-        end
-    end
-end)
-
-
-Events:Subscribe('Partition:Loaded', function(partition)
-    for _, instance in pairs(partition.instances) do
-        if instance:Is('OutdoorLightComponentData') then
-            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
-            print("storing guid")
-        end
-
-        if instance:Is('SkyComponentData') then
-            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
-            print("storing guid")
-        end
-
-        if instance:Is('FogComponentData') then
-            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
-            print("storing guid")
-        end
-
-        if instance:Is('TonemapComponentData') then
-            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
-            print("storing guid")
-        end
-
-        if instance:Is('EnlightenComponentData') then
-            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
-            print("storing guid")
-        end
-
-        if instance:Is('SunFlareComponentData') then
-            night_guids[1 + #night_guids] = {instance.partitionGuid, instance.instanceGuid}
-            print("storing guid")
         end
     end
 end)
